@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: promotion
+  
+  # MySQL数据库配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/promotion?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 3000
+      connection-timeout: 2000
+  
+
+# MyBatis配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.sa.promotion.domain.*.entity
+  type-handlers-package: com.sa.promotion.infrastructure.persistence.typehandler
+  configuration:
+    map-underscore-to-camel-case: true
+
+# 日志配置
+logging:
+  level:
+    com.sa.promotion: DEBUG
+    org.springframework: INFO
+    com.zaxxer.hikari: INFO
+
+# 定时任务配置
+promotion:
+  scheduled:
+    auto-activate-rate: 60000   # 自动生效扫描间隔（毫秒），默认60秒
+    auto-expire-rate: 60000     # 自动过期扫描间隔（毫秒），默认60秒

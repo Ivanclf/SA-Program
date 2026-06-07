@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sa.promotion.domain.audit.repository.AuditRecordRepository">
+
+    <!--
+      AuditRecord 数据来源于 audit_record 表：
+      - audit_id       → auditId
+      - promotion_id   → promotionId
+      - audit_status   → auditStatus
+      - submit_time    → submitTime
+      - complete_time  → completeTime
+      - auditor_id     → auditorId
+      - comment        → comment
+      - ctime          → ctime
+      - utime          → utime
+    -->
+
+    <resultMap id="AuditRecordResultMap" type="com.sa.promotion.domain.audit.entity.AuditRecord">
+        <id column="audit_id" property="auditId"/>
+        <result column="promotion_id" property="promotionId"/>
+        <result column="audit_status" property="auditStatus"
+                javaType="com.sa.promotion.domain.audit.enums.AuditStatus"/>
+        <result column="submit_time" property="submitTime"/>
+        <result column="complete_time" property="completeTime"/>
+        <result column="auditor_id" property="auditorId"/>
+        <result column="comment" property="comment"/>
+        <result column="ctime" property="ctime"/>
+        <result column="utime" property="utime"/>
+    </resultMap>
+
+    <!-- ==================== CRUD ==================== -->
+
+    <insert id="save">
+        INSERT INTO audit_record (audit_id, promotion_id, audit_status, submit_time, complete_time,
+                                  auditor_id, comment, ctime, utime)
+        VALUES (#{auditId}, #{promotionId},
+                #{auditStatus, javaType=com.sa.promotion.domain.audit.enums.AuditStatus},
+                #{submitTime}, #{completeTime}, #{auditorId}, #{comment}, #{ctime}, #{utime})
+    </insert>
+
+    <update id="update">
+        UPDATE audit_record
+        SET audit_status = #{auditStatus, javaType=com.sa.promotion.domain.audit.enums.AuditStatus},
+            submit_time = #{submitTime},
+            complete_time = #{completeTime},
+            auditor_id = #{auditorId},
+            comment = #{comment},
+            utime = #{utime}
+        WHERE audit_id = #{auditId}
+    </update>
+
+    <select id="findById" resultMap="AuditRecordResultMap">
+        SELECT * FROM audit_record WHERE audit_id = #{auditId}
+    </select>
+
+    <select id="findByPromotionId" resultMap="AuditRecordResultMap">
+        SELECT * FROM audit_record WHERE promotion_id = #{promotionId}
+        ORDER BY ctime DESC LIMIT 1
+    </select>
+
+    <select id="findAll" resultMap="AuditRecordResultMap">
+        SELECT * FROM audit_record ORDER BY ctime DESC
+    </select>
+
+    <select id="exists" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM audit_record WHERE promotion_id = #{promotionId}
+    </select>
+
+</mapper>

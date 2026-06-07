@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sa.promotion.domain.sku.repository.SkuRepository">
+
+    <resultMap id="SkuResultMap" type="com.sa.promotion.domain.sku.entity.Sku">
+        <id column="sku_id" property="skuId"/>
+        <result column="sku_name" property="skuName"/>
+        <result column="original_price" property="originalPrice"/>
+    </resultMap>
+
+    <insert id="save">
+        INSERT INTO sku (sku_id, sku_name, original_price)
+        VALUES (#{skuId}, #{skuName}, #{originalPrice})
+    </insert>
+
+    <update id="update">
+        UPDATE sku SET sku_name = #{skuName}, original_price = #{originalPrice}
+        WHERE sku_id = #{skuId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM sku WHERE sku_id = #{skuId}
+    </delete>
+
+    <select id="findBySkuId" resultMap="SkuResultMap">
+        SELECT * FROM sku WHERE sku_id = #{skuId}
+    </select>
+
+    <select id="findAll" resultMap="SkuResultMap">
+        SELECT * FROM sku
+    </select>
+
+    <select id="findBySkuIds" resultMap="SkuResultMap">
+        SELECT * FROM sku WHERE sku_id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="exists" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM sku WHERE sku_id = #{skuId}
+    </select>
+
+</mapper>

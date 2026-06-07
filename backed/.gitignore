@@ -1,0 +1,64 @@
+HELP.md
+
+### Java / Maven / Gradle ###
+target/
+build/
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+
+# Keep Maven wrapper jar
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### OS generated ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+### Editor backup ###
+*~
+\#*\#
+*.swp
+*.swo
+*.swn
+
+### Logs ###
+*.log
+logs/
+
+### Env ###
+.env
+.env.*
+!.env.example

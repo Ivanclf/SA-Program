@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sa.promotion.domain.promotion.repository.PromotionRepository">
+
+    <!-- ==================== ResultMap ==================== -->
+
+    <resultMap id="PromotionResultMap" type="com.sa.promotion.domain.promotion.entity.Promotion">
+        <id column="promotion_id" property="promotionId"/>
+        <result column="name" property="name"/>
+        <result column="stime" property="stime"/>
+        <result column="etime" property="etime"/>
+        <result column="creator" property="creator"/>
+        <result column="operator" property="operator"/>
+        <result column="status" property="status"
+                javaType="com.sa.promotion.domain.promotion.enums.PromotionStatus"/>
+        <result column="audit_status" property="auditStatus"
+                javaType="com.sa.promotion.domain.audit.enums.AuditStatus"/>
+        <result column="ctime" property="ctime"/>
+        <result column="utime" property="utime"/>
+        <collection property="promotionSkus" ofType="com.sa.promotion.domain.promotion.entity.PromotionSku"
+                    column="promotion_id" select="findSkusByPromotionId"/>
+    </resultMap>
+
+    <resultMap id="PromotionLiteResultMap" type="com.sa.promotion.domain.promotion.entity.Promotion">
+        <id column="promotion_id" property="promotionId"/>
+        <result column="name" property="name"/>
+        <result column="stime" property="stime"/>
+        <result column="etime" property="etime"/>
+        <result column="creator" property="creator"/>
+        <result column="operator" property="operator"/>
+        <result column="status" property="status"
+                javaType="com.sa.promotion.domain.promotion.enums.PromotionStatus"/>
+        <result column="audit_status" property="auditStatus"
+                javaType="com.sa.promotion.domain.audit.enums.AuditStatus"/>
+        <result column="ctime" property="ctime"/>
+        <result column="utime" property="utime"/>
+    </resultMap>
+
+    <resultMap id="PromotionSkuResultMap" type="com.sa.promotion.domain.promotion.entity.PromotionSku">
+        <id column="id" property="id"/>
+        <result column="promotion_id" property="promotionId"/>
+        <result column="sku_id" property="skuId"/>
+        <result column="discount" property="discount"/>
+    </resultMap>
+
+    <!-- ==================== Promotion CRUD ==================== -->
+
+    <insert id="save">
+        INSERT INTO promotion (promotion_id, name, stime, etime, creator, operator, status, audit_status, ctime, utime)
+        VALUES (#{promotionId}, #{name}, #{stime}, #{etime}, #{creator}, #{operator},
+                #{status, javaType=com.sa.promotion.domain.promotion.enums.PromotionStatus},
+                #{auditStatus, javaType=com.sa.promotion.domain.audit.enums.AuditStatus},
+                #{ctime}, #{utime})
+    </insert>
+
+    <update id="update">
+        UPDATE promotion
+        SET name = #{name}, stime = #{stime}, etime = #{etime},
+            operator = #{operator},
+            status = #{status, javaType=com.sa.promotion.domain.promotion.enums.PromotionStatus},
+            audit_status = #{auditStatus, javaType=com.sa.promotion.domain.audit.enums.AuditStatus},
+            utime = #{utime}
+        WHERE promotion_id = #{promotionId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM promotion WHERE promotion_id = #{promotionId}
+    </delete>
+
+    <select id="findById" resultMap="PromotionResultMap">
+        SELECT * FROM promotion WHERE promotion_id = #{promotionId}
+    </select>
+
+    <select id="findAll" resultMap="PromotionLiteResultMap">
+        SELECT * FROM promotion ORDER BY ctime DESC
+    </select>
+
+    <select id="exists" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM promotion WHERE promotion_id = #{promotionId}
+    </select>
+
+    <!-- ==================== PromotionSku CRUD ==================== -->
+
+    <select id="findSkusByPromotionId" resultMap="PromotionSkuResultMap">
+        SELECT * FROM promotion_sku WHERE promotion_id = #{promotionId}
+    </select>
+
+    <insert id="insertPromotionSku">
+        INSERT INTO promotion_sku (id, promotion_id, sku_id, discount)
+        VALUES (#{id}, #{promotionId}, #{skuId}, #{discount})
+    </insert>
+
+    <delete id="deletePromotionSkus">
+        DELETE FROM promotion_sku WHERE promotion_id = #{promotionId}
+    </delete>
+
+</mapper>

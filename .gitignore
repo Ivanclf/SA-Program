@@ -1,0 +1,66 @@
+### IDE & Editor ###
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+.factorypath
+.springBeans
+.sts4-cache
+.apt_generated
+/nbproject/private/
+/nbbuild/
+/nbdist/
+/.nb-gradle/
+
+### OS generated ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+### Editor backup ###
+*~
+\#*\#
+*.swp
+*.swo
+*.swn
+
+### Java / Maven / Gradle ###
+target/
+build/
+!.mvn/wrapper/maven-wrapper.jar
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+
+### Node / Frontend ###
+node_modules/
+dist/
+.next/
+.nuxt/
+*.tsbuildinfo
+
+### Logs ###
+*.log
+logs/
+
+### Env & Config ###
+.env
+.env.*
+!.env.example
+
+### Archive ###
+*.zip
+*.tar.gz
+*.rar
+*.7z

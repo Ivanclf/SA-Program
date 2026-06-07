@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sa.promotion.domain.user.repository.UserRepository">
+
+    <resultMap id="UserResultMap" type="com.sa.promotion.domain.user.entity.User">
+        <id column="user_id" property="userId"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="role" property="role"/>
+        <result column="ctime" property="ctime"/>
+        <result column="utime" property="utime"/>
+    </resultMap>
+
+    <insert id="save">
+        INSERT INTO user (user_id, username, password, role, ctime, utime)
+        VALUES (#{userId}, #{username}, #{password}, #{role}, #{ctime}, #{utime})
+    </insert>
+
+    <update id="update">
+        UPDATE user
+        SET username = #{username}, password = #{password}, role = #{role}, utime = #{utime}
+        WHERE user_id = #{userId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM user WHERE user_id = #{userId}
+    </delete>
+
+    <select id="findById" resultMap="UserResultMap">
+        SELECT * FROM user WHERE user_id = #{userId}
+    </select>
+
+    <select id="findByUsername" resultMap="UserResultMap">
+        SELECT * FROM user WHERE username = #{username}
+    </select>
+
+    <select id="findAll" resultMap="UserResultMap">
+        SELECT * FROM user ORDER BY ctime DESC
+    </select>
+
+    <select id="exists" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM user WHERE user_id = #{userId}
+    </select>
+
+</mapper>
