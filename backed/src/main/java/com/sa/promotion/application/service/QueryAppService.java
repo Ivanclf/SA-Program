@@ -2,6 +2,8 @@ package com.sa.promotion.application.service;
 
 import com.sa.promotion.domain.audit.entity.AuditRecord;
 import com.sa.promotion.domain.audit.repository.AuditRecordRepository;
+import com.sa.promotion.domain.event.entity.EventLog;
+import com.sa.promotion.domain.event.service.EventLogService;
 import com.sa.promotion.domain.exception.ResourceNotFoundException;
 import com.sa.promotion.domain.promotion.entity.Promotion;
 import com.sa.promotion.domain.promotion.repository.PromotionRepository;
@@ -25,13 +27,16 @@ public class QueryAppService {
     private final PromotionRepository promotionRepository;
     private final AuditRecordRepository auditRecordRepository;
     private final SkuDomainService skuDomainService;
+    private final EventLogService eventLogService;
 
     public QueryAppService(PromotionRepository promotionRepository,
                            AuditRecordRepository auditRecordRepository,
-                           SkuDomainService skuDomainService) {
+                           SkuDomainService skuDomainService,
+                           EventLogService eventLogService) {
         this.promotionRepository = promotionRepository;
         this.auditRecordRepository = auditRecordRepository;
         this.skuDomainService = skuDomainService;
+        this.eventLogService = eventLogService;
     }
 
     /**
@@ -73,5 +78,12 @@ public class QueryAppService {
      */
     public List<Sku> listSkus() {
         return skuDomainService.listAllSkus();
+    }
+
+    /**
+     * 查询活动事件日志（按时间正序）
+     */
+    public List<EventLog> getEventsByPromotionId(String promotionId) {
+        return eventLogService.queryByPromotionId(promotionId);
     }
 }

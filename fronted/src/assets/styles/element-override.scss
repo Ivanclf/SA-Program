@@ -1,0 +1,43 @@
+// ============================================================
+// Element Plus 样式覆盖
+// ============================================================
+// 注意：CSS 过渡/动画不涉及 window.location 修改，
+// 不会触发 Windows 浏览器最小化恢复问题，可放心启用。
+// ============================================================
+
+// ---- Element Plus 组件微调 ----
+
+// 表格行悬停过渡
+.el-table__body tr {
+  transition: background-color 0.15s ease;
+}
+
+// 卡片阴影过渡
+.el-card {
+  transition: box-shadow 0.2s ease;
+}
+
+// 按钮悬停/激活过渡
+.el-button {
+  transition: all 0.2s ease;
+}
+
+// 侧边栏菜单项过渡
+.el-menu-item {
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+// 标签过渡
+.el-tag {
+  transition: all 0.2s ease;
+}
+
+// 下拉菜单项过渡
+.el-dropdown-menu__item {
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+// 分页按钮过渡
+.el-pager li {
+  transition: all 0.2s ease;
+}

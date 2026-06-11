@@ -1116,20 +1116,109 @@ VITE_API_BASE_URL=https://api.example.com
 
 ---
 
-## 17. 附录
+## 17. 开发 TodoList
 
-### 17.1 引用文档
+> 使用方式：按顺序逐阶段开发，完成一项勾选 `[x]`。每个阶段内的子任务可按实际情况并行或调整顺序。
+
+### 阶段 1：项目脚手架搭建
+
+- [x] 1.1 初始化 Vite + Vue 3 + TypeScript 项目
+- [x] 1.2 安装依赖：vue-router, pinia, axios, element-plus, @element-plus/icons-vue, dayjs, sass
+- [x] 1.3 配置 Vite（路径别名 `@`、SCSS 全局变量、代理转发 API）
+- [x] 1.4 配置 TypeScript（tsconfig.json 路径映射）
+- [x] 1.5 配置环境变量文件 `.env.development` / `.env.production`
+- [x] 1.6 创建 `src/api/index.ts` —— Axios 实例 + 请求/响应拦截器
+- [x] 1.7 创建 `src/types/api.ts` —— `ApiResponse<T>` 泛型接口
+- [x] 1.8 创建全局样式文件（`variables.scss`、`global.scss`、`element-override.scss`）
+- [x] 1.9 创建 `src/utils/enums.ts` —— 活动状态、审核状态、事件类型枚举及映射表
+- [x] 1.10 创建 `App.vue` + `main.ts` 入口文件，验证项目能跑通
+
+### 阶段 2：登录/注册 + 权限路由守卫 + Layout 布局
+
+- [x] 2.1 创建 `src/types/user.ts` —— `User`, `LoginRequest`, `RegisterRequest` 类型
+- [x] 2.2 创建 `src/api/auth.ts` —— 登录/注册/登出/查询用户 API
+- [x] 2.3 创建 `src/stores/auth.ts` —— authStore（token、user、登录/登出/注册 action）
+- [x] 2.4 创建 `src/views/login/LoginView.vue` —— 登录页（居中卡片表单 + 注册弹窗）
+- [x] 2.5 创建 `src/composables/usePermission.ts` —— 权限判断 composable
+- [x] 2.6 创建布局组件：`AppLayout.vue`、`Sidebar.vue`、`HeaderBar.vue`
+- [x] 2.7 创建 `CustomerLayout.vue`（客户端的简洁布局）
+- [x] 2.8 更新 `src/router/index.ts` —— 完整路由表 + `beforeEach` 守卫（未登录→/login，角色不匹配→/403）
+- [x] 2.9 创建错误页 `NotFound.vue`（404）、`Forbidden.vue`（403）
+- [x] 2.10 验证：`vue-tsc --noEmit` 零错误，`vite build` 构建成功
+
+### 阶段 3：活动管理模块
+
+- [x] 3.1 创建 `src/types/promotion.ts` —— `Promotion`, `PromotionSku`, `CreatePromotionRequest`, `UpdatePromotionRequest`
+- [x] 3.2 创建 `src/types/event.ts` —— `PromotionEvent` 类型
+- [x] 3.3 创建 `src/api/promotion.ts` —— 活动 CRUD + 提交审核 + 手动下线 API
+- [x] 3.4 创建 `src/stores/promotion.ts` —— promotionStore（list/current/loading + 所有 action + 状态 computed）
+- [x] 3.5 创建 `src/composables/useStatusMap.ts` —— 状态码映射 composable
+- [x] 3.6 创建 `StatusTag.vue` —— 活动/审核状态标签组件
+- [x] 3.7 创建 `PromotionList.vue` —— 活动列表页（表格 + 搜索 + 状态筛选 + 分页 + 动态操作按钮）
+- [x] 3.8 创建 `SkuSelector.vue` —— SKU 选择器组件（搜索 + 多选 + 设置折扣 + 分页）
+- [x] 3.9 创建 `PromotionForm.vue` —— 活动创建/编辑表单组件（名称/时间/SKU 关联 + 验证规则）
+- [x] 3.10 创建 `PromotionCreate.vue` —— 活动创建页（组装 PromotionForm）
+- [x] 3.11 创建 `PromotionEdit.vue` —— 活动编辑页（组装 PromotionForm + 初始数据加载）
+- [x] 3.12 创建 `EventTimeline.vue` —— 事件时间线组件
+- [x] 3.13 创建 `PromotionDetail.vue` —— 活动详情页（信息展示 + SKU 列表 + 事件时间线 + 操作按钮）
+- [x] 3.14 创建 `ConfirmDialog.vue` —— 通用确认弹窗组件
+- [x] 3.15 验证：创建活动 → 编辑 → 提交审核 → 查看详情/事件时间线 全流程
+
+### 阶段 4：审核模块
+
+- [x] 4.1 创建 `src/types/audit.ts` —— `AuditRecord`, `AuditRequest` 类型
+- [x] 4.2 创建 `src/api/audit.ts` —— 审核通过/驳回/不通过/作废/查询状态 API
+- [x] 4.3 创建 `src/stores/audit.ts` —— auditStore（list/current + 所有审核 action）
+- [x] 4.4 创建 `AuditList.vue` —— 审核任务列表页（表格 + 状态筛选）
+- [x] 4.5 创建 `AuditPanel.vue` —— 审核操作面板组件（动态按钮 + 审核意见输入 + 确认弹窗）
+- [x] 4.6 创建 `AuditDetail.vue` —— 审核详情页（活动信息只读 + 审核面板 + 审核历史）
+- [x] 4.7 验证：审核员登录 → 查看待审核列表 → 审核通过/驳回/不通过/作废 全流程
+
+### 阶段 5：SKU 管理模块
+
+- [x] 5.1 创建 `src/types/sku.ts` —— `Sku`, `CreateSkuRequest` 类型
+- [x] 5.2 创建 `src/api/sku.ts` —— SKU CRUD + 列表查询 API
+- [x] 5.3 创建 `src/stores/sku.ts` —— skuStore（list/current + 所有 CRUD action）
+- [x] 5.4 创建 `SkuList.vue` —— SKU 列表页（表格 + 增删改查）
+- [x] 5.5 创建 `SkuCreate.vue` —— SKU 创建页（名称 + 原价表单）
+- [x] 5.6 创建 `SkuEdit.vue` —— SKU 编辑页
+- [x] 5.7 验证：创建/编辑/删除 SKU 全流程
+
+### 阶段 6：客户查询页
+
+- [x] 6.1 创建 `src/api/customer.ts` —— 客户查询 API
+- [x] 6.2 创建 `DiscountBadge.vue` —— 折扣标签组件
+- [x] 6.3 创建 `PromotionView.vue` —— 客户活动详情页（只读 + CustomerLayout）
+- [x] 6.4 创建 `SkuDiscount.vue` —— 客户 SKU 折扣页（只读 + CustomerLayout）
+- [x] 6.5 验证：无需登录访问客户页面，活动信息及折扣正确展示
+
+### 阶段 7：联调测试与收尾
+
+- [x] 7.1 `src/composables/usePagination.ts` —— 提取公共分页逻辑
+- [x] 7.2 `src/utils/validators.ts` —— 提取公共表单验证规则
+- [x] 7.3 创建 `EmptyState.vue` —— 空状态占位组件
+- [x] 7.4 全流程端到端测试：创建活动 → 提交审核 → 审核通过 → 自动生效 → 过期/手动下线
+- [x] 7.5 错误场景测试：401 跳转登录、403 无权限、各类表单验证边界
+- [x] 7.6 UI 细节打磨：loading 态、空数据态、响应式适配、过渡动画
+- [x] 7.7 代码整理：移除 console.log、统一 import 顺序、类型检查零报错
+- [x] 7.8 构建验证：`npm run build` 无报错，产物可部署
+
+---
+
+## 18 附录
+
+### 18.1 引用文档
 
 - 促销活动管理标准化系统需求文档（PRD）
 - 促销活动管理标准化系统——用例分析与质量属性需求设计文档
 - 促销活动管理标准化系统——事件驱动架构设计文档
 - 促销活动管理标准化系统 架构 ATAM 评估意见书
 
-### 17.2 后端接口完整对照（附录）
+### 18.2 后端接口完整对照（附录）
 
 见第 7.2 节及后端 `requirement.md` 第 5 章接口设计。
 
-### 17.3 双状态机前端位图
+### 18.3 双状态机前端位图
 
 | 活动状态 ↓ \ 审核状态 → | 等待审核(0) | 审核中(1) | 通过(2) | 驳回(3) | 不通过(4) | 作废(5) |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|

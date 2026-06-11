@@ -115,16 +115,16 @@ CREATE TABLE IF NOT EXISTS `event_log` (
 
 -- 1. 用户 (10条)
 INSERT INTO `user` (`user_id`, `username`, `password`, `role`, `ctime`) VALUES
-('SYSTEM', 'system',   '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 1, DATE_SUB(NOW(), INTERVAL 120 DAY)),
-('u001',  'admin',     '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 1, DATE_SUB(NOW(), INTERVAL 120 DAY)),
-('u002',  'zhangsan',  '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 1, DATE_SUB(NOW(), INTERVAL 100 DAY)),
-('u003',  'lisi',      '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 1, DATE_SUB(NOW(), INTERVAL 90 DAY)),
-('u004',  'wangwu',    '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 1, DATE_SUB(NOW(), INTERVAL 80 DAY)),
-('u005',  'zhaoliu',   '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 1, DATE_SUB(NOW(), INTERVAL 70 DAY)),
-('u006',  'auditor01', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 2, DATE_SUB(NOW(), INTERVAL 110 DAY)),
-('u007',  'auditor02', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 2, DATE_SUB(NOW(), INTERVAL 100 DAY)),
-('u008',  'auditor03', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 2, DATE_SUB(NOW(), INTERVAL 90 DAY)),
-('u009',  'auditor04', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 2, DATE_SUB(NOW(), INTERVAL 80 DAY));
+('SYSTEM', 'system',   '$2a$10$mwvbuL58c9xn8xsH6GydVepB0pOuAcF95PtSZ1a7KmRb8ocoILSAK', 1, DATE_SUB(NOW(), INTERVAL 120 DAY)),
+('u001',  'admin',     '$2a$10$mwvbuL58c9xn8xsH6GydVepB0pOuAcF95PtSZ1a7KmRb8ocoILSAK', 1, DATE_SUB(NOW(), INTERVAL 120 DAY)),
+('u002',  'zhangsan',  '$2a$10$mwvbuL58c9xn8xsH6GydVepB0pOuAcF95PtSZ1a7KmRb8ocoILSAK', 1, DATE_SUB(NOW(), INTERVAL 100 DAY)),
+('u003',  'lisi',      '$2a$10$mwvbuL58c9xn8xsH6GydVepB0pOuAcF95PtSZ1a7KmRb8ocoILSAK', 1, DATE_SUB(NOW(), INTERVAL 90 DAY)),
+('u004',  'wangwu',    '$2a$10$mwvbuL58c9xn8xsH6GydVepB0pOuAcF95PtSZ1a7KmRb8ocoILSAK', 1, DATE_SUB(NOW(), INTERVAL 80 DAY)),
+('u005',  'zhaoliu',   '$2a$10$mwvbuL58c9xn8xsH6GydVepB0pOuAcF95PtSZ1a7KmRb8ocoILSAK', 1, DATE_SUB(NOW(), INTERVAL 70 DAY)),
+('u006',  'auditor01', '$2a$10$mwvbuL58c9xn8xsH6GydVepB0pOuAcF95PtSZ1a7KmRb8ocoILSAK', 2, DATE_SUB(NOW(), INTERVAL 110 DAY)),
+('u007',  'auditor02', '$2a$10$mwvbuL58c9xn8xsH6GydVepB0pOuAcF95PtSZ1a7KmRb8ocoILSAK', 2, DATE_SUB(NOW(), INTERVAL 100 DAY)),
+('u008',  'auditor03', '$2a$10$mwvbuL58c9xn8xsH6GydVepB0pOuAcF95PtSZ1a7KmRb8ocoILSAK', 2, DATE_SUB(NOW(), INTERVAL 90 DAY)),
+('u009',  'auditor04', '$2a$10$mwvbuL58c9xn8xsH6GydVepB0pOuAcF95PtSZ1a7KmRb8ocoILSAK', 2, DATE_SUB(NOW(), INTERVAL 80 DAY));
 
 -- 2. SKU (12条)
 INSERT INTO `sku` (`sku_id`, `sku_name`, `original_price`) VALUES

@@ -6,9 +6,11 @@ import com.sa.promotion.application.dto.response.ApiResponse;
 import com.sa.promotion.application.service.PromotionAppService;
 import com.sa.promotion.application.service.QueryAppService;
 import com.sa.promotion.domain.event.entity.Event;
+import com.sa.promotion.domain.event.entity.EventLog;
 import com.sa.promotion.domain.promotion.entity.Promotion;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -101,6 +103,38 @@ public class PromotionController {
     @GetMapping("/{id}")
     public ApiResponse<Promotion> getPromotion(@PathVariable String id) {
         Promotion promotion = queryAppService.getPromotion(id);
+        return ApiResponse.success(promotion);
+    }
+
+    /**
+     * 查询活动事件时间线
+     */
+    @GetMapping("/{id}/events")
+    public ApiResponse<List<EventLog>> getPromotionEvents(@PathVariable String id) {
+        List<EventLog> events = queryAppService.getEventsByPromotionId(id);
+        return ApiResponse.success(events);
+    }
+
+    /**
+     * 为活动添加 SKU 并设置折扣
+     */
+    @PostMapping("/{id}/sku")
+    public ApiResponse<Promotion> addSku(@PathVariable String id,
+                                         @RequestParam String skuId,
+                                         @RequestParam BigDecimal discount,
+                                         @RequestParam String operatorId) {
+        Promotion promotion = promotionAppService.addSkuToPromotion(id, skuId, discount, operatorId);
+        return ApiResponse.success(promotion);
+    }
+
+    /**
+     * 从活动移除 SKU
+     */
+    @DeleteMapping("/{id}/sku/{skuId}")
+    public ApiResponse<Promotion> removeSku(@PathVariable String id,
+                                            @PathVariable String skuId,
+                                            @RequestParam String operatorId) {
+        Promotion promotion = promotionAppService.removeSkuFromPromotion(id, skuId, operatorId);
         return ApiResponse.success(promotion);
     }
 }
