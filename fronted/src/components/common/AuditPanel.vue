@@ -22,7 +22,7 @@ import { AuditStatus } from '@/utils/enums'
 
 const props = defineProps<{
   promotionId: string
-  auditStatus: number
+  auditStatus: string
 }>()
 
 const emit = defineEmits<{

@@ -141,7 +141,7 @@ INSERT INTO `sku` (`sku_id`, `sku_name`, `original_price`) VALUES
 ('sku011', '三星 T7 Shield 2TB 移动固态硬盘',      1299.00),
 ('sku012', 'Anker 737 移动电源 24000mAh',          499.00);
 
--- 3. 活动 (14条) — 覆盖全部状态组合
+-- 3. 活动 (15条) — 覆盖全部状态组合
 INSERT INTO `promotion` (`promotion_id`, `name`, `stime`, `etime`, `creator`, `operator`, `status`, `audit_status`, `ctime`) VALUES
 -- [草稿阶段]
 ('promo001', '年终清仓特卖',            '2026-12-20 00:00:00', '2026-12-31 23:59:59', 'u001', 'u001', 0, 0, DATE_SUB(NOW(), INTERVAL 2 DAY)),
@@ -162,7 +162,9 @@ INSERT INTO `promotion` (`promotion_id`, `name`, `stime`, `etime`, `creator`, `o
 ('promo012', '品牌日特卖（违规下线）',  '2026-05-01 00:00:00', '2026-05-10 23:59:59', 'u002', 'u002', 5, 2, DATE_SUB(NOW(), INTERVAL 40 DAY)),
 -- [审核作废/不通过]
 ('promo013', '测试活动（审核作废）',    '2026-07-01 00:00:00', '2026-07-07 23:59:59', 'u004', 'u009', 5, 5, DATE_SUB(NOW(), INTERVAL 15 DAY)),
-('promo014', '过期活动（审核不通过）',  '2026-03-10 00:00:00', '2026-03-20 23:59:59', 'u005', 'u007', 5, 4, DATE_SUB(NOW(), INTERVAL 60 DAY));
+('promo014', '过期活动（审核不通过）',  '2026-03-10 00:00:00', '2026-03-20 23:59:59', 'u005', 'u007', 4, 4, DATE_SUB(NOW(), INTERVAL 60 DAY)),
+-- [已删除-仅保留记录用于事件日志FK完整性]
+('promo015', '已删除的测试活动',        '2026-08-01 00:00:00', '2026-08-10 23:59:59', 'u001', 'u001', 0, 0, DATE_SUB(NOW(), INTERVAL 1 DAY));
 
 -- 4. 活动-SKU关联 (18条)
 INSERT INTO `promotion_sku` (`id`, `promotion_id`, `sku_id`, `discount`) VALUES
@@ -194,7 +196,7 @@ INSERT INTO `promotion_sku` (`id`, `promotion_id`, `sku_id`, `discount`) VALUES
 -- promo009: 已过期，1个SKU
 ('ps018', 'promo009', 'sku008', 0.82);
 
--- 5. 审核记录 (14条)
+-- 5. 审核记录 (15条)
 INSERT INTO `audit_record` (`audit_id`, `promotion_id`, `audit_status`, `submit_time`, `complete_time`, `auditor_id`, `comment`, `ctime`) VALUES
 ('ar001',  'promo001', 0, NULL,                                       NULL,                                       NULL,    NULL,                    DATE_SUB(NOW(), INTERVAL 2 DAY)),
 ('ar002',  'promo002', 1, DATE_SUB(NOW(), INTERVAL 3 DAY),            NULL,                                       NULL,    NULL,                    DATE_SUB(NOW(), INTERVAL 5 DAY)),
@@ -209,9 +211,10 @@ INSERT INTO `audit_record` (`audit_id`, `promotion_id`, `audit_status`, `submit_
 ('ar011',  'promo011', 2, DATE_SUB(NOW(), INTERVAL 68 DAY),           DATE_SUB(NOW(), INTERVAL 67 DAY),          'u007',  '通过',                    DATE_SUB(NOW(), INTERVAL 70 DAY)),
 ('ar012',  'promo012', 2, DATE_SUB(NOW(), INTERVAL 38 DAY),           DATE_SUB(NOW(), INTERVAL 37 DAY),          'u008',  '审核通过',                DATE_SUB(NOW(), INTERVAL 40 DAY)),
 ('ar013',  'promo013', 5, DATE_SUB(NOW(), INTERVAL 13 DAY),           DATE_SUB(NOW(), INTERVAL 12 DAY),          'u009',  '活动方案不合规，作废处理',  DATE_SUB(NOW(), INTERVAL 15 DAY)),
-('ar014',  'promo014', 4, DATE_SUB(NOW(), INTERVAL 58 DAY),           DATE_SUB(NOW(), INTERVAL 57 DAY),          'u007',  '商品资质不全，不予通过',    DATE_SUB(NOW(), INTERVAL 60 DAY));
+('ar014',  'promo014', 4, DATE_SUB(NOW(), INTERVAL 58 DAY),           DATE_SUB(NOW(), INTERVAL 57 DAY),          'u007',  '商品资质不全，不予通过',    DATE_SUB(NOW(), INTERVAL 60 DAY)),
+('ar015',  'promo015', 0, NULL,                                       NULL,                                       NULL,    NULL,                    DATE_SUB(NOW(), INTERVAL 1 DAY));
 
--- 6. 事件日志 (20条) — 覆盖全事件类型
+-- 6. 事件日志 (23条) — 覆盖全事件类型
 INSERT INTO `event_log` (`event_id`, `event_type`, `promotion_id`, `prev_activity_status`, `prev_audit_status`, `operator`, `event_time`, `params`) VALUES
 -- promo001: 草稿 [1条]
 ('evt001', 'E_CREATE_DRAFT',  'promo001', NULL, NULL, 'u001', DATE_SUB(NOW(), INTERVAL 2 DAY),  '{"name":"年终清仓特卖"}'),
@@ -251,5 +254,10 @@ INSERT INTO `event_log` (`event_id`, `event_type`, `promotion_id`, `prev_activit
 ('evt019', 'E_AUDIT_CANCEL',  'promo013', 0,    0,    'u009', DATE_SUB(NOW(), INTERVAL 12 DAY), '{"comment":"活动方案不合规，作废处理"}'),
 
 -- promo014: 审核不通过 [1条]
-('evt020', 'E_AUDIT_NOTPASS', 'promo014', 1,    1,    'u007', DATE_SUB(NOW(), INTERVAL 57 DAY), '{"comment":"商品资质不全，不予通过"}');
+('evt020', 'E_AUDIT_NOTPASS', 'promo014', 1,    1,    'u007', DATE_SUB(NOW(), INTERVAL 57 DAY), '{"comment":"商品资质不全，不予通过"}'),
+
+-- promo015: 创建→更新→删除 [3条] (仅保留记录用于FK完整性)
+('evt021', 'E_CREATE_DRAFT',    'promo015', NULL, NULL, 'u001', DATE_SUB(NOW(), INTERVAL 1 DAY),   '{"name":"已删除的测试活动"}'),
+('evt022', 'E_UPDATE_ACTIVITY', 'promo015', 0,    0,    'u001', DATE_SUB(NOW(), INTERVAL 12 HOUR), '{"name":"已删除的测试活动(已修改)"}'),
+('evt023', 'E_DELETE_ACTIVITY', 'promo015', 0,    0,    'u001', DATE_SUB(NOW(), INTERVAL 6 HOUR),  '{}');
 

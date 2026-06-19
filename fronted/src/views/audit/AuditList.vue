@@ -10,24 +10,28 @@
  * - 表格列：活动ID / 名称 / 审核状态 / 活动状态 / 时间范围
  * - 状态筛选：全部 / 等待审核 / 审核中 / 已驳回 / 已通过 / 终态
  * - 点击行跳转审核详情 /audit/:promotionId
+ * - 操作列：根据审核状态动态显示 审核通过/审核驳回/审核作废 按钮
  */
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import dayjs from 'dayjs'
 import { usePromotionStore } from '@/stores/promotion'
-import { AuditStatusMap } from '@/utils/enums'
+import { useAuditStore } from '@/stores/audit'
+import { AuditStatus, AuditStatusMap } from '@/utils/enums'
 import StatusTag from '@/components/common/StatusTag.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
 import type { Promotion } from '@/types/promotion'
 
 const router = useRouter()
 const promotionStore = usePromotionStore()
+const auditStore = useAuditStore()
 
 // ---- 筛选 ----
-const filterStatus = ref<number | null>(null)
+const filterStatus = ref<string | null>(null)
 
 const statusOptions = Object.entries(AuditStatusMap).map(([code, item]) => ({
-  value: Number(code),
+  value: code,
   label: item.label,
 }))
 
@@ -51,6 +55,84 @@ const pagedList = computed(() => {
 
 function onFilterChange() {
   page.value = 1
+}
+
+// ---- 审核操作权限判断（逐行） ----
+
+/** 审核中 → 可通过/驳回 */
+function canAudit(p: Promotion): boolean {
+  return p.auditStatus === AuditStatus.AUDITING
+}
+
+/** 等待审核 或 驳回 → 可作废 */
+function canCancel(p: Promotion): boolean {
+  return p.auditStatus === AuditStatus.WAITING || p.auditStatus === AuditStatus.REJECTED
+}
+
+/** 是否有可用的审核操作 */
+function hasAuditAction(p: Promotion): boolean {
+  return canAudit(p) || canCancel(p)
+}
+
+// ---- 审核操作处理 ----
+
+async function handlePass(id: string, name: string) {
+  try {
+    const { value: comment } = await ElMessageBox.prompt(
+      `确认通过活动「${name}」的审核？`,
+      '审核通过',
+      {
+        confirmButtonText: '确认通过',
+        cancelButtonText: '取消',
+        inputPlaceholder: '审核意见（选填）',
+        inputType: 'textarea',
+      },
+    )
+    await auditStore.pass(id, comment ?? '')
+    ElMessage.success('审核已通过')
+    promotionStore.fetchList()
+  } catch {
+    // 用户取消
+  }
+}
+
+async function handleReject(id: string, name: string) {
+  try {
+    const { value: comment } = await ElMessageBox.prompt(
+      `确认驳回活动「${name}」？驳回后管理员可修改并重新提交。`,
+      '审核驳回',
+      {
+        confirmButtonText: '确认驳回',
+        cancelButtonText: '取消',
+        inputPlaceholder: '审核意见（选填）',
+        inputType: 'textarea',
+      },
+    )
+    await auditStore.reject(id, comment ?? '')
+    ElMessage.success('审核已驳回')
+    promotionStore.fetchList()
+  } catch {
+    // 用户取消
+  }
+}
+
+async function handleCancel(id: string, name: string) {
+  try {
+    await ElMessageBox.confirm(
+      `确认作废活动「${name}」的审核？此操作为终态，不可恢复。`,
+      '审核作废',
+      {
+        confirmButtonText: '确认作废',
+        cancelButtonText: '取消',
+        type: 'warning',
+      },
+    )
+    await auditStore.cancel(id, '作废')
+    ElMessage.success('审核已作废')
+    promotionStore.fetchList()
+  } catch {
+    // 用户取消
+  }
 }
 
 // ---- 导航 ----
@@ -137,16 +219,49 @@ onMounted(() => {
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" width="100" fixed="right">
+      <el-table-column label="操作" width="260" fixed="right">
         <template #default="{ row }">
-          <el-button
-            size="small"
-            type="primary"
-            link
-            @click.stop="handleView(row.promotionId)"
-          >
-            审核
-          </el-button>
+          <div class="cell-actions" @click.stop>
+            <el-button
+              v-if="canAudit(row)"
+              size="small"
+              type="success"
+              @click="handlePass(row.promotionId, row.name)"
+            >
+              审核通过
+            </el-button>
+            <el-button
+              v-if="canAudit(row)"
+              size="small"
+              type="warning"
+              @click="handleReject(row.promotionId, row.name)"
+            >
+              审核驳回
+            </el-button>
+            <el-button
+              v-if="canCancel(row)"
+              size="small"
+              type="danger"
+              plain
+              @click="handleCancel(row.promotionId, row.name)"
+            >
+              审核作废
+            </el-button>
+            <el-button
+              size="small"
+              type="primary"
+              link
+              @click="handleView(row.promotionId)"
+            >
+              详情
+            </el-button>
+            <span
+              v-if="!hasAuditAction(row)"
+              class="text-muted"
+            >
+              终态
+            </span>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -190,6 +305,18 @@ onMounted(() => {
   max-width: 140px;
   display: inline-block;
   cursor: default;
+}
+
+.cell-actions {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.text-muted {
+  color: #c0c4cc;
+  font-size: 13px;
 }
 
 .pagination-wrap {

@@ -170,15 +170,18 @@ public class PromotionDomainService {
         // 5. 通过审核状态机引擎执行状态转换（统一使用引擎管理状态流转）
         auditStateEngine.transition(auditRecord, EventType.E_SUBMIT_AUDIT);
 
-        // 6. 设置审核元数据
+        // 6. 同步 promotion.auditStatus ← auditRecord.auditStatus
+        promotion.setAuditStatus(auditRecord.getAuditStatus());
+
+        // 7. 设置审核元数据
         auditRecord.setSubmitTime(LocalDateTime.now());
         auditRecord.setUtime(LocalDateTime.now());
 
-        // 7. 更新操作人和时间
+        // 8. 更新操作人和时间
         promotion.setOperator(operatorId);
         promotion.setUtime(LocalDateTime.now());
-        
-        // 8. 产生E_SUBMIT_AUDIT事件
+
+        // 9. 产生E_SUBMIT_AUDIT事件
         Event event = Event.builder()
             .eventId(UUID.randomUUID().toString())
             .eventType(EventType.E_SUBMIT_AUDIT)
@@ -189,7 +192,7 @@ public class PromotionDomainService {
             .eventTime(LocalDateTime.now())
             .build();
 
-        // 9. 事件发布由 Application 层统一处理
+        // 10. 事件发布由 Application 层统一处理
 
         return event;
     }

@@ -6,6 +6,9 @@ import com.sa.promotion.domain.audit.repository.AuditRecordRepository;
 import com.sa.promotion.domain.promotion.entity.Promotion;
 import com.sa.promotion.domain.promotion.enums.PromotionStatus;
 import com.sa.promotion.domain.promotion.repository.PromotionRepository;
+import com.sa.promotion.domain.event.entity.EventLog;
+import com.sa.promotion.domain.event.enums.EventType;
+import com.sa.promotion.domain.event.service.EventLogService;
 import com.sa.promotion.domain.sku.entity.Sku;
 import com.sa.promotion.domain.sku.service.SkuDomainService;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,11 +34,12 @@ class QueryAppServiceTest {
     @Mock private PromotionRepository promotionRepository;
     @Mock private AuditRecordRepository auditRecordRepository;
     @Mock private SkuDomainService skuDomainService;
+    @Mock private EventLogService eventLogService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        queryAppService = new QueryAppService(promotionRepository, auditRecordRepository, skuDomainService);
+        queryAppService = new QueryAppService(promotionRepository, auditRecordRepository, skuDomainService, eventLogService);
     }
 
     @Test

@@ -1,14 +1,17 @@
-/** 活动状态 */
+/**
+ * 活动状态
+ * 值对应后端 Jackson 序列化的枚举名（name()），均为字符串
+ */
 export enum PromotionStatus {
-  DRAFT = 0,     // 草稿
-  AUDITING = 1,  // 审核中
-  INIT = 2,      // 待生效
-  ONLINE = 3,    // 生效中
-  EXPIRE = 4,    // 过时
-  OFFLINE = 5,   // 下线
+  DRAFT = 'DRAFT',         // 草稿
+  AUDITING = 'AUDITING',   // 审核中
+  INIT = 'INIT',           // 待生效
+  ONLINE = 'ONLINE',       // 生效中
+  EXPIRE = 'EXPIRE',       // 过时
+  OFFLINE = 'OFFLINE',     // 下线
 }
 
-export const PromotionStatusMap: Record<number, { label: string; color: string }> = {
+export const PromotionStatusMap: Record<string, { label: string; color: string }> = {
   [PromotionStatus.DRAFT]:    { label: '草稿',   color: 'info' },
   [PromotionStatus.AUDITING]: { label: '审核中', color: 'warning' },
   [PromotionStatus.INIT]:     { label: '待生效', color: 'primary' },
@@ -17,17 +20,20 @@ export const PromotionStatusMap: Record<number, { label: string; color: string }
   [PromotionStatus.OFFLINE]:  { label: '已下线', color: 'danger' },
 }
 
-/** 审核状态 */
+/**
+ * 审核状态
+ * 值对应后端 Jackson 序列化的枚举名（name()），均为字符串
+ */
 export enum AuditStatus {
-  WAITING = 0,    // 等待审核
-  AUDITING = 1,   // 审核中
-  PASSED = 2,     // 审核通过
-  REJECTED = 3,   // 审核驳回
-  NOT_PASSED = 4, // 审核不通过
-  CANCELLED = 5,  // 审核拟作废
+  WAITING = 'WAITING',         // 等待审核
+  AUDITING = 'AUDITING',       // 审核中
+  PASSED = 'PASSED',           // 审核通过
+  REJECTED = 'REJECTED',       // 审核驳回
+  NOT_PASSED = 'NOT_PASSED',   // 审核不通过
+  CANCELLED = 'CANCELLED',     // 审核拟作废
 }
 
-export const AuditStatusMap: Record<number, { label: string; color: string }> = {
+export const AuditStatusMap: Record<string, { label: string; color: string }> = {
   [AuditStatus.WAITING]:    { label: '等待审核',  color: 'info' },
   [AuditStatus.AUDITING]:   { label: '审核中',    color: 'warning' },
   [AuditStatus.PASSED]:     { label: '审核通过',  color: 'success' },

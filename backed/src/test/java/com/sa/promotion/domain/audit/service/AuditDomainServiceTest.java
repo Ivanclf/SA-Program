@@ -120,6 +120,7 @@ class AuditDomainServiceTest {
         assertNotNull(event);
         assertEquals(EventType.E_AUDIT_PASS, event.getEventType());
         assertEquals(AuditStatus.PASSED, auditRecord.getAuditStatus());
+        assertEquals(AuditStatus.PASSED, promotion.getAuditStatus());
         assertEquals(PromotionStatus.INIT, promotion.getStatus());
         assertEquals("auditor-001", auditRecord.getAuditorId());
         assertEquals("审核通过", auditRecord.getComment());
@@ -157,6 +158,7 @@ class AuditDomainServiceTest {
         assertNotNull(event);
         assertEquals(EventType.E_AUDIT_REJECT, event.getEventType());
         assertEquals(AuditStatus.REJECTED, auditRecord.getAuditStatus());
+        assertEquals(AuditStatus.REJECTED, promotion.getAuditStatus());
         assertEquals(PromotionStatus.DRAFT, promotion.getStatus());
         assertEquals("auditor-001", auditRecord.getAuditorId());
     }
@@ -181,6 +183,7 @@ class AuditDomainServiceTest {
         assertNotNull(event);
         assertEquals(EventType.E_AUDIT_NOTPASS, event.getEventType());
         assertEquals(AuditStatus.NOT_PASSED, auditRecord.getAuditStatus());
+        assertEquals(AuditStatus.NOT_PASSED, promotion.getAuditStatus());
         assertEquals(PromotionStatus.EXPIRE, promotion.getStatus());
         assertEquals("auditor-001", auditRecord.getAuditorId());
     }
@@ -208,6 +211,7 @@ class AuditDomainServiceTest {
         assertNotNull(event);
         assertEquals(EventType.E_AUDIT_CANCEL, event.getEventType());
         assertEquals(AuditStatus.CANCELLED, auditRecord.getAuditStatus());
+        assertEquals(AuditStatus.CANCELLED, promotion.getAuditStatus());
         assertEquals(PromotionStatus.OFFLINE, promotion.getStatus());
         assertEquals("取消审核", auditRecord.getComment());
     }
@@ -222,6 +226,7 @@ class AuditDomainServiceTest {
 
         assertNotNull(event);
         assertEquals(AuditStatus.CANCELLED, auditRecord.getAuditStatus());
+        assertEquals(AuditStatus.CANCELLED, promotion.getAuditStatus());
         assertEquals(PromotionStatus.OFFLINE, promotion.getStatus());
     }
 
@@ -246,6 +251,7 @@ class AuditDomainServiceTest {
         assertNotNull(event);
         assertEquals(EventType.E_SUBMIT_AUDIT, event.getEventType());
         assertEquals(AuditStatus.AUDITING, auditRecord.getAuditStatus());
+        assertEquals(AuditStatus.AUDITING, promotion.getAuditStatus());
         assertEquals(PromotionStatus.AUDITING, promotion.getStatus());
         assertNotNull(auditRecord.getSubmitTime());
     }

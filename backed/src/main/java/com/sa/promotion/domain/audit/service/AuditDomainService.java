@@ -98,20 +98,23 @@ public class AuditDomainService {
         // 4. 通过审核状态机引擎执行状态转换（统一使用引擎管理状态流转）
         auditStateEngine.transition(auditRecord, EventType.E_AUDIT_PASS);
 
-        // 5. 设置审核元数据
+        // 5. 同步 promotion.auditStatus ← auditRecord.auditStatus
+        promotion.setAuditStatus(auditRecord.getAuditStatus());
+
+        // 6. 设置审核元数据
         auditRecord.setAuditorId(auditorId);
         auditRecord.setComment(comment);
         auditRecord.setCompleteTime(LocalDateTime.now());
         auditRecord.setUtime(LocalDateTime.now());
 
-        // 6. 执行活动状态机联动转换
+        // 7. 执行活动状态机联动转换
         promotionStateEngine.transition(promotion, EventType.E_AUDIT_PASS);
 
-        // 7. 更新时间
+        // 8. 更新时间
         promotion.setOperator(auditorId);
         promotion.setUtime(LocalDateTime.now());
 
-        // 8. 产生E_AUDIT_PASS事件
+        // 9. 产生E_AUDIT_PASS事件
         Event event = Event.builder()
             .eventId(UUID.randomUUID().toString())
             .eventType(EventType.E_AUDIT_PASS)
@@ -159,16 +162,19 @@ public class AuditDomainService {
         // 4. 通过审核状态机引擎执行状态转换
         auditStateEngine.transition(auditRecord, EventType.E_AUDIT_REJECT);
 
-        // 5. 设置审核元数据
+        // 5. 同步 promotion.auditStatus ← auditRecord.auditStatus
+        promotion.setAuditStatus(auditRecord.getAuditStatus());
+
+        // 6. 设置审核元数据
         auditRecord.setAuditorId(auditorId);
         auditRecord.setComment(comment);
         auditRecord.setCompleteTime(LocalDateTime.now());
         auditRecord.setUtime(LocalDateTime.now());
 
-        // 6. 执行活动状态机联动转换
+        // 7. 执行活动状态机联动转换
         promotionStateEngine.transition(promotion, EventType.E_AUDIT_REJECT);
 
-        // 7. 更新时间
+        // 8. 更新时间
         promotion.setOperator(auditorId);
         promotion.setUtime(LocalDateTime.now());
 
@@ -220,16 +226,19 @@ public class AuditDomainService {
         // 4. 通过审核状态机引擎执行状态转换
         auditStateEngine.transition(auditRecord, EventType.E_AUDIT_NOTPASS);
 
-        // 5. 设置审核元数据
+        // 5. 同步 promotion.auditStatus ← auditRecord.auditStatus
+        promotion.setAuditStatus(auditRecord.getAuditStatus());
+
+        // 6. 设置审核元数据
         auditRecord.setAuditorId(auditorId);
         auditRecord.setComment(comment);
         auditRecord.setCompleteTime(LocalDateTime.now());
         auditRecord.setUtime(LocalDateTime.now());
 
-        // 6. 执行活动状态机联动转换
+        // 7. 执行活动状态机联动转换
         promotionStateEngine.transition(promotion, EventType.E_AUDIT_NOTPASS);
 
-        // 7. 更新时间
+        // 8. 更新时间
         promotion.setOperator(auditorId);
         promotion.setUtime(LocalDateTime.now());
 
@@ -282,15 +291,18 @@ public class AuditDomainService {
         // 4. 通过审核状态机引擎执行状态转换
         auditStateEngine.transition(auditRecord, EventType.E_AUDIT_CANCEL);
 
-        // 5. 设置审核元数据
+        // 5. 同步 promotion.auditStatus ← auditRecord.auditStatus
+        promotion.setAuditStatus(auditRecord.getAuditStatus());
+
+        // 6. 设置审核元数据
         auditRecord.setComment(comment);
         auditRecord.setCompleteTime(LocalDateTime.now());
         auditRecord.setUtime(LocalDateTime.now());
 
-        // 6. 执行活动状态机联动转换
+        // 7. 执行活动状态机联动转换
         promotionStateEngine.transition(promotion, EventType.E_AUDIT_CANCEL);
 
-        // 7. 更新时间
+        // 8. 更新时间
         promotion.setOperator(operatorId);
         promotion.setUtime(LocalDateTime.now());
 
@@ -341,14 +353,17 @@ public class AuditDomainService {
         // 4. 通过审核状态机引擎执行状态转换 (REJECTED -> AUDITING)
         auditStateEngine.transition(auditRecord, EventType.E_SUBMIT_AUDIT);
 
-        // 5. 设置审核元数据
+        // 5. 同步 promotion.auditStatus ← auditRecord.auditStatus
+        promotion.setAuditStatus(auditRecord.getAuditStatus());
+
+        // 6. 设置审核元数据
         auditRecord.setSubmitTime(LocalDateTime.now());
         auditRecord.setUtime(LocalDateTime.now());
 
-        // 6. 执行活动状态机联动转换 (DRAFT -> AUDITING)
+        // 7. 执行活动状态机联动转换 (DRAFT -> AUDITING)
         promotionStateEngine.transition(promotion, EventType.E_SUBMIT_AUDIT);
 
-        // 7. 更新活动操作人和时间
+        // 8. 更新活动操作人和时间
         promotion.setOperator(operatorId);
         promotion.setUtime(LocalDateTime.now());
 

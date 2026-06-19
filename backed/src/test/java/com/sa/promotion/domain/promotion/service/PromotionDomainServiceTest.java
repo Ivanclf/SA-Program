@@ -159,6 +159,7 @@ class PromotionDomainServiceTest {
         assertEquals(EventType.E_SUBMIT_AUDIT, event.getEventType());
         assertEquals(PromotionStatus.AUDITING, promotion.getStatus());
         assertEquals(AuditStatus.AUDITING, auditRecord.getAuditStatus());
+        assertEquals(AuditStatus.AUDITING, promotion.getAuditStatus());
     }
     
     @Test

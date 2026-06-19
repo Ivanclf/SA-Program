@@ -65,6 +65,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
     localStorage.removeItem('token')
     localStorage.removeItem('user')
+    sessionStorage.removeItem('lastPath')
     token.value = null
     user.value = null
   }

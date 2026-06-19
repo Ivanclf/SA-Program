@@ -29,11 +29,11 @@ const { isAdmin } = usePermission()
 
 // ---- 搜索 & 筛选 ----
 const searchName = ref('')
-const filterStatus = ref<number | null>(null)
+const filterStatus = ref<string | null>(null)
 
 // 活动状态下拉选项（从枚举映射表生成）
 const statusOptions = Object.entries(PromotionStatusMap).map(([code, item]) => ({
-  value: Number(code),
+  value: code,
   label: item.label,
 }))
 

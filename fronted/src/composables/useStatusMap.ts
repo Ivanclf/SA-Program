@@ -6,22 +6,22 @@ import { PromotionStatusMap, AuditStatusMap } from '@/utils/enums'
  */
 export function useStatusMap() {
   /** 获取活动状态标签 */
-  function getPromotionLabel(status: number): string {
+  function getPromotionLabel(status: string): string {
     return PromotionStatusMap[status]?.label ?? '未知'
   }
 
   /** 获取活动状态颜色 */
-  function getPromotionColor(status: number): string {
+  function getPromotionColor(status: string): string {
     return PromotionStatusMap[status]?.color ?? 'info'
   }
 
   /** 获取审核状态标签 */
-  function getAuditLabel(status: number): string {
+  function getAuditLabel(status: string): string {
     return AuditStatusMap[status]?.label ?? '未知'
   }
 
   /** 获取审核状态颜色 */
-  function getAuditColor(status: number): string {
+  function getAuditColor(status: string): string {
     return AuditStatusMap[status]?.color ?? 'info'
   }
 

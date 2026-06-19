@@ -129,6 +129,9 @@ const routes: RouteRecordRaw[] = [
   },
 ]
 
+/** 刷新恢复 key */
+const LAST_PATH_KEY = 'lastPath'
+
 // ---- 路由实例 ----
 const router = createRouter({
   // Windows 兼容：Memory 模式不修改浏览器 URL，避免触发窗口强制恢复
@@ -175,6 +178,21 @@ router.beforeEach((to, _from, next) => {
   }
 
   next()
+})
+
+// 每次导航后保存路径，用于刷新恢复（MemoryHistory 刷新后丢失路由状态）
+router.afterEach((to) => {
+  if (to.path !== '/login' && to.path !== '/403') {
+    sessionStorage.setItem(LAST_PATH_KEY, to.fullPath)
+  }
+})
+
+// 刷新后恢复上次路径
+router.isReady().then(() => {
+  const saved = sessionStorage.getItem(LAST_PATH_KEY)
+  if (saved && saved !== '/' && router.currentRoute.value.path === '/') {
+    router.push(saved)
+  }
 })
 
 export default router
