@@ -1,0 +1,42 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: promotion
+
+  # H2 内存数据库（MySQL兼容模式）
+  datasource:
+    url: jdbc:h2:mem:promotion;MODE=MySQL;DATABASE_TO_LOWER=TRUE;NON_KEYWORDS=USER
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema-h2.sql
+
+# MyBatis配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.sa.promotion.domain.*.entity
+  type-handlers-package: com.sa.promotion.infrastructure.persistence.typehandler
+  configuration:
+    map-underscore-to-camel-case: true
+
+# 日志配置
+logging:
+  level:
+    com.sa.promotion: DEBUG
+    org.springframework: WARN
+    com.zaxxer.hikari: WARN
+
+# 定时任务（测试环境设长间隔避免干扰）
+promotion:
+  scheduled:
+    auto-activate-rate: 86400000
+    auto-expire-rate: 86400000
